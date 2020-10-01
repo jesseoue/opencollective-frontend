@@ -1377,6 +1377,8 @@ type ExpensesStatsType {
 Possible statuses for an Expense
 """
 enum ExpenseStatus {
+  DRAFT
+  UNVERIFIED
   PENDING
   APPROVED
   REJECTED
@@ -2000,7 +2002,6 @@ type Mutation {
   editComment(comment: CommentAttributesInputType!): CommentType
   deleteComment(id: Int!): CommentType
   cancelSubscription(id: Int!): OrderType
-  updateSubscription(id: Int!, paymentMethod: PaymentMethodInputType, amount: Int): OrderType
   refundTransaction(id: Int!): Transaction
   addFundsToOrg(totalAmount: Int!, CollectiveId: Int!, HostCollectiveId: Int!, description: String): PaymentMethodType
   createApplication(application: ApplicationInput!): Application
