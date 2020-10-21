@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { FastField, Field } from 'formik';
-import { first, get, partition } from 'lodash';
+import { first, get, partition, pick } from 'lodash';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import hasFeature, { FEATURES } from '../../lib/allowed-features';
@@ -151,9 +151,16 @@ const ExpenseFormPayeeStep = ({ formik, payoutProfiles, collective, onCancel, on
                     data-cy="select-expense-payee"
                     collective={values.payee}
                     onChange={({ value }) => {
-                      formik.setFieldValue('payee', value);
-                      formik.setFieldValue('payoutMethod', null);
-                      setLocationFromPayee(formik, value);
+                      if (value) {
+                        const payee =
+                          value.slug && payoutProfiles.some(p => p.slug === value.slug)
+                            ? value
+                            : { ...pick(value, ['id', 'name', 'slug', 'email']), isInvite: true };
+
+                        formik.setFieldValue('payee', payee);
+                        formik.setFieldValue('payoutMethod', null);
+                        setLocationFromPayee(formik, payee);
+                      }
                     }}
                     limit={5}
                     styles={{
